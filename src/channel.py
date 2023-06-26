@@ -31,8 +31,52 @@ class Channel:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
 
 
+    def get_info(self):
+        """Выводит информацию о канале в dict."""
+        channel = youtube.channels().list(id=id, part='snippet,statistics').execute()
+        return channel
+
+
+    def __setattr__(self, title, get_info):
+        self.title = get_info["items"]["snippet"]["title"]
+        # self.description = description
+        # self.url = url
+        # self.subscriberCount = subscriberCount
+        # self.videoCount = videoCount
+        # self.viewCount = viewCount
+
+    # @classmethod
+    # # def add_channel_info(cls, get_info):
+    #     cls.title = get_info["items"]["snippet"]["title"]
+    #     cls.description = get_info["items"]["snippet"]["description"]
+    #     cls.url = get_info["items"]["snippet"]["thumbnails"]["url"]
+    #     cls.subscriberCount = get_info["items"]["statistics"]["subscriberCount"]
+    #     cls.video_count = get_info["items"]["statistics"]["videoCount"]
+    #     cls.viewCount = get_info["items"]["statistics"]["viewCount"]
+    #     # return cls(title, description, url, subscriberCount, video_count, viewCount)
+
+
     def print_info(self):
         """Выводит в консоль информацию о канале."""
         channel = youtube.channels().list(id=self.id, part='snippet,statistics').execute()
         print(json.dumps(channel, indent=2, ensure_ascii=False))
+
+    @staticmethod
+    def get_service():
+        """Возвращает объект для работы с YouTube API"""
+        return youtube
+
+    def to_json(self, text):
+        with open('moscowpython.json', 'w') as file:
+            file.write(text)
+
+
+
+
+
+
+
+
+
+
 
