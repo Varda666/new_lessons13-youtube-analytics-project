@@ -33,12 +33,40 @@ class Channel:
         self.title = self.channel["items"][0]["snippet"]["title"]
         self.channel_description = self.channel['items'][0]['snippet']['description']
         self.url = "https://www.youtube.com/channel/" + self.__channel_id
-        self.subscriber_count = self.channel['items'][0]['statistics']['subscriberCount']
+        self.subscriber_count = int(self.channel['items'][0]['statistics']['subscriberCount'])
         self.video_count = self.channel['items'][0]['statistics']['videoCount']
         self.view_count = self.channel['items'][0]['statistics']['viewCount']
 
+    def __str__(self):
+        """Возвращает название и ссылку на канал"""
+        return f'{self.title} ({self.url})'
 
+    def __add__(self, other):
+        """ Складывает два канала между собой по количеству подписчиков """
+        return self.subscriber_count + other.subscriber_count
 
+    def __sub__(self, other):
+        """ Возвращает разницу в количестве подписчиков двух каналов """
+        if self.subscriber_count > other.subscriber_count:
+            return self.subscriber_count - other.subscriber_count
+        else:
+            return other.subscriber_count - self.subscriber_count
+
+    def __lt__(self, other):
+        """ Сравнивает количество подписчиков двух каналов """
+        return self.subscriber_count < other.subscriber_count
+
+    def __le__(self, other):
+        """ Сравнивает количество подписчиков двух каналов """
+        return self.subscriber_count <= other.subscriber_count
+
+    def __gt__(self, other):
+        """ Сравнивает количество подписчиков двух каналов """
+        return self.subscriber_count > other.subscriber_count
+
+    def __ge__(self, other):
+        """ Сравнивает количество подписчиков двух каналов """
+        return self.subscriber_count >= other.subscriber_count
 
 
     def get_info(self):
