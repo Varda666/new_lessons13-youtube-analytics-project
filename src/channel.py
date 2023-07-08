@@ -93,7 +93,7 @@ class Channel:
 # self.__channel_id, self.title, self.channel_description, self.url, self.subscriber_count, self.video_count, self.view_count
 
 
-
+# print(youtube.channels().list(id='UC-OVMPlMA3-YCIeg4z5z23A', part='snippet, statistic').execute())
 
 
 
