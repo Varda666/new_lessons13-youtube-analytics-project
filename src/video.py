@@ -11,9 +11,14 @@ api_key: str = os.getenv('API_KEY')
 youtube = build('youtube', 'v3', developerKey=api_key)
 # print([method for method in dir(youtube) if callable(getattr(youtube, method))])
 
-class UncorrectVideoId(Exception):
+class UncorrectedVideoId(Exception):
     def __init__(self, *args, **kwargs):
-        pass
+            self.video_title = None
+            self.video_description = None
+            self.url = None
+            self.view_count = None
+            self.like_count = None
+
 
 
 
@@ -21,22 +26,16 @@ class Video:
     def __init__(self, video_id: str):
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.video_id = video_id
-        try:
-            self.video = youtube.videos().list(id=self.video_id, part='snippet,statistics').execute()
-            if self.video["items"] != []:
-                self.video_title = self.video["items"][0]["snippet"]["title"]
-                self.video_description = self.video['items'][0]['snippet']['description']
-                self.url = "https://www.youtube.com/video/" + self.video_id
-                self.view_count = self.video['items'][0]['statistics']['viewCount']
-                self.like_count = self.video['items'][0]['statistics']['likeCount']
-            elif self.video["items"] == []:
-                self.video_title = None
-                self.video_description = None
-                self.url = None
-                self.view_count = None
-                self.like_count = None
-        except UncorrectVideoId:
-            print('')
+        self.video = youtube.videos().list(id=self.video_id, part='snippet,statistics').execute()
+        if self.video["items"] == []:
+            raise UncorrectedVideoId
+        else:
+            self.video_title = self.video["items"][0]["snippet"]["title"]
+            self.video_description = self.video['items'][0]['snippet']['description']
+            self.url = "https://www.youtube.com/video/" + self.video_id
+            self.view_count = self.video['items'][0]['statistics']['viewCount']
+            self.like_count = self.video['items'][0]['statistics']['likeCount']
+
 
 
 
